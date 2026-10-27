@@ -1,0 +1,52 @@
+:root{--bg:#eef3f8;--card:#fff;--ink:#16202e;--mut:#5a6778;--pri:#1f6feb;--src:#d9480f;--cab:#0b7285;--load:#6741d9;--met:#2b8a3e;--line:#d5dde8}
+*{box-sizing:border-box}
+html,body{margin:0;max-width:100%;overflow-x:hidden}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;font-size:16px}
+.hero{background:linear-gradient(135deg,#0b2a4a,#1f6feb);color:#fff;padding:20px 16px;text-align:center}
+.hero h1{margin:0 0 6px;font-size:clamp(1.25rem,4.5vw,2rem)}
+.hero p{margin:0 auto 10px;max-width:760px}
+nav{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+nav a{color:#fff;background:rgba(255,255,255,.18);padding:8px 14px;border-radius:20px;text-decoration:none;min-height:40px;display:inline-flex;align-items:center}
+main{max-width:1200px;margin:0 auto;padding:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:14px;min-width:0}
+h2{margin:0 0 10px;font-size:1.25rem}h3{margin:14px 0 6px;font-size:1.05rem}
+.grid-lab,.grid-res{display:grid;grid-template-columns:3fr 2fr;gap:14px}
+.grid-res{grid-template-columns:1fr 1fr}
+.grid-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chartbox{position:relative;height:300px;min-width:0}
+#circuit{width:100%;height:auto;background:#f7fafc;border:1px solid var(--line);border-radius:8px;display:block}
+.note{color:var(--mut);font-size:.88rem;margin:6px 0}
+.warn{background:#fff3bf;border:1px solid #f59f00;padding:10px;border-radius:8px;margin-bottom:12px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+button{font:inherit;min-height:44px;padding:8px 14px;border:1px solid var(--pri);background:#fff;color:var(--pri);border-radius:8px;cursor:pointer}
+button:hover{background:#e7f0ff}button.primary{background:var(--pri);color:#fff}
+.switch{display:inline-flex;gap:8px;align-items:center;min-height:44px}
+.switch input{width:22px;height:22px}
+.row{display:grid;grid-template-columns:1fr;gap:4px;margin-bottom:12px}
+.row .line{display:flex;gap:8px;align-items:center}
+input[type=range]{flex:1;min-width:0;height:32px}
+input[type=number],select{font:inherit;padding:6px;border:1px solid var(--line);border-radius:6px;min-height:40px}
+.row input[type=number]{width:84px}select{width:100%}
+.unit{width:36px;color:var(--mut)}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.res{border:1px solid var(--line);border-left:5px solid var(--met);border-radius:8px;padding:8px}
+.res small{display:block;color:var(--mut)}.res b{font-size:1.2rem;word-break:break-word}
+.res.s{border-left-color:var(--src)}.res.c{border-left-color:var(--cab)}.res.l{border-left-color:var(--load)}
+.meter{height:20px;background:#e9ecef;border-radius:10px;overflow:hidden;margin-top:12px}
+#meter-bar{height:100%;width:0;transition:width .3s,background .3s}
+.thr input{width:70px}
+.tbl{width:100%;border-collapse:collapse;font-size:.9rem}
+.tbl th,.tbl td{border:1px solid var(--line);padding:5px 7px;text-align:left}.tbl th{background:#f1f5f9}
+.tablewrap{overflow-x:auto;max-width:100%;margin-top:10px}
+.tablewrap .tbl{min-width:900px}
+.tablewrap td input{width:120px;font:inherit;min-height:32px}
+details{border:1px solid var(--line);border-radius:8px;padding:8px 12px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:600;min-height:32px}
+.formula{background:#f1f5f9;border-left:4px solid var(--pri);padding:8px 10px;margin:8px 0;overflow-x:auto;font-family:Georgia,serif}
+.q{border:1px solid var(--line);border-radius:8px;padding:10px;margin-bottom:10px}
+.q label{display:flex;gap:8px;align-items:flex-start;padding:6px 4px;min-height:40px}
+.q input{width:20px;height:20px;margin-top:2px}
+.q .exp{margin-top:6px;padding:6px 8px;border-radius:6px}.ok{background:#d3f9d8}.bad{background:#ffe3e3}
+.score{font-size:1.2rem;font-weight:700}
+footer{text-align:center;color:var(--mut);padding:16px;font-size:.85rem}
+@media(max-width:800px){.grid-lab,.grid-res,.grid-charts{grid-template-columns:1fr}.chartbox{height:260px}main{padding:8px}button{flex:1 1 45%}}

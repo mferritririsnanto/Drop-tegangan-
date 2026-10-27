@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hukum Drop Tegangan terhadap Resistansi dan Panjang Kabel</title>
+<meta name="description" content="Simulasi interaktif drop tegangan pada kabel: panjang, penampang, bahan, suhu, dan beban.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <h1>⚡ Hukum Drop Tegangan terhadap Resistansi Kabel dan Panjang Kabel</h1>
+  <p>Laboratorium virtual rangkaian DC resistif. Ubah satu variabel, amati rangkaian, angka, dan grafik berubah secara langsung.</p>
+  <nav>
+    <a href="#lab">Simulasi</a><a href="#grafik">Grafik</a><a href="#teori">Teori</a>
+    <a href="#eksperimen">Eksperimen</a><a href="#kuis">Kuis</a><a href="#model">Tentang Model</a>
+  </nav>
+</header>
+
+<main>
+<div id="cdn-warning" class="warn" hidden>Pustaka grafik (Chart.js) gagal dimuat. Periksa koneksi internet lalu muat ulang halaman. Simulasi rangkaian dan hasil perhitungan tetap berfungsi, tetapi grafik tidak tampil.</div>
+
+<section id="lab" class="grid-lab">
+  <div class="card circuit-card">
+    <h2>Rangkaian Virtual</h2>
+    <svg id="circuit" viewBox="0 0 700 300" role="img" aria-label="Rangkaian sumber tegangan, kabel dua kawat, dan beban resistor"></svg>
+    <p class="note">Partikel bergerak = arah arus konvensional (visualisasi konseptual, bukan simulasi elektron). Warna kabel menunjukkan besar drop tegangan; angka dan label tetap menjadi informasi utama.</p>
+    <div class="btns">
+      <button id="btn-start" class="primary">▶ Mulai simulasi</button>
+      <button id="btn-pause">⏸ Jeda animasi</button>
+      <label class="switch"><input type="checkbox" id="sw" checked> <span>Sakelar: <b id="sw-text">ON</b></span></label>
+    </div>
+    <div class="btns">
+      <button id="btn-reset">↺ Reset</button>
+      <button id="btn-default">Kembali ke nilai awal</button>
+      <button id="btn-random">🎲 Acak eksperimen</button>
+      <button id="btn-compare">⇄ Bandingkan dua eksperimen</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Panel Kontrol</h2>
+    <div id="controls"></div>
+    <div class="row">
+      <label for="mat">Bahan kabel</label>
+      <select id="mat"></select>
+    </div>
+    <p class="note" id="mat-note"></p>
+  </div>
+</section>
+
+<section class="grid-res">
+  <div class="card">
+    <h2>Hasil Pengukuran Real-time</h2>
+    <div id="results" class="results"></div>
+    <div class="meter-wrap">
+      <div class="meter"><div id="meter-bar"></div></div>
+      <p><b id="meter-label"></b></p>
+      <div class="thr">Batas indikator (%): rendah &lt; <input type="number" id="th1" value="3" min="0.1" max="50" step="0.1"> sedang &lt; <input type="number" id="th2" value="10" min="0.2" max="90" step="0.1"> selebihnya tinggi.</div>
+      <p class="note">Kategori hanya indikator pembelajaran yang dapat disesuaikan, bukan standar untuk semua instalasi.</p>
+    </div>
+    <p id="energy-check" class="note"></p>
+  </div>
+  <div class="card">
+    <h2>Kesimpulan Otomatis</h2>
+    <div id="conclusion"></div>
+    <h3>Kabel ideal vs kabel nyata</h3>
+    <table class="tbl" id="ideal-tbl"></table>
+    <div id="compare-box" hidden>
+      <h3>Perbandingan Eksperimen A dan B</h3>
+      <p class="note">A = data tersimpan, B = kondisi saat ini (berubah real-time).</p>
+      <table class="tbl" id="compare-tbl"></table>
+      <button id="btn-clear-a">Hapus eksperimen A</button>
+    </div>
+  </div>
+</section>
+
+<section id="grafik" class="card">
+  <h2>Grafik Interaktif</h2>
+  <p class="note">Kurva dihitung dari model fisika pada parameter saat ini (rangkaian dianggap ON). Titik besar = kondisi eksperimen sekarang.</p>
+  <div class="grid-charts">
+    <div class="chartbox"><canvas id="c1"></canvas></div>
+    <div class="chartbox"><canvas id="c2"></canvas></div>
+    <div class="chartbox"><canvas id="c3"></canvas></div>
+    <div class="chartbox"><canvas id="c4"></canvas></div>
+  </div>
+  <p class="note">Grafik 3: pada V<sub>s</sub> dan R<sub>beban</sub> tetap, arus ikut berubah saat resistansi kabel berubah, sehingga kurva tidak lurus.</p>
+</section>
+
+<section class="card" id="petunjuk">
+  <h2>Petunjuk Penggunaan</h2>
+  <ol>
+    <li>Pilih tegangan sumber.</li><li>Atur panjang kabel.</li><li>Pilih luas penampang.</li><li>Pilih bahan kabel.</li>
+    <li>Atur resistansi beban (dan suhu bila perlu).</li><li>Aktifkan rangkaian dengan sakelar ON.</li>
+    <li>Amati hasil pengukuran dan rangkaian.</li><li>Buka grafik untuk melihat hubungan antarvariabel.</li>
+    <li>Ubah <b>satu variabel pada satu waktu</b>, lalu tekan “Catat ke tabel”.</li><li>Gunakan Reset untuk mengulang percobaan.</li>
+  </ol>
+</section>
+
+<section id="teori" class="card theory">
+  <h2>Teori dan Rumus</h2>
+  <details open><summary>Apa itu drop tegangan?</summary>
+    <p>Drop tegangan adalah penurunan tegangan sepanjang kabel akibat resistansi kabel ketika arus mengalir. Karena itu tegangan di beban lebih rendah daripada tegangan sumber: V<sub>beban</sub> = V<sub>s</sub> − V<sub>drop</sub>.</p></details>
+  <details><summary>Resistivitas dan resistansi</summary>
+    <p>Resistivitas (ρ) adalah sifat bahan (Ω·m). Resistansi (R) adalah sifat benda tertentu, bergantung pada bahan, panjang, dan penampang. Kabel memiliki resistansi karena elektron bebas bertumbukan dengan atom-atom konduktor. Kabel lebih panjang berarti lintasan lebih panjang sehingga R lebih besar. Penampang lebih besar berarti lebih banyak jalur paralel sehingga R lebih kecil.</p>
+    <div class="formula">R<sub>kabel</sub> = 2 × ρ × L / A</div>
+    <div class="formula">ρ<sub>T</sub> = ρ<sub>20</sub> × [1 + α (T − 20)]</div>
+    <div class="formula">I = V<sub>s</sub> / (R<sub>beban</sub> + R<sub>kabel</sub>)</div>
+    <div class="formula">V<sub>drop</sub> = I × R<sub>kabel</sub> &nbsp;|&nbsp; V<sub>beban</sub> = V<sub>s</sub> − V<sub>drop</sub></div>
+    <div class="formula">P<sub>sumber</sub> = V<sub>s</sub> I &nbsp;|&nbsp; P<sub>kabel</sub> = I² R<sub>kabel</sub> &nbsp;|&nbsp; P<sub>beban</sub> = I² R<sub>beban</sub></div>
+    <div class="formula">η = P<sub>beban</sub> / P<sub>sumber</sub> × 100% &nbsp;|&nbsp; %drop = V<sub>drop</sub> / V<sub>s</sub> × 100%</div>
+    <ul>
+      <li>V<sub>s</sub>: tegangan sumber (V); L: panjang kabel satu arah (m); A: luas penampang (mm², dikali 10⁻⁶ menjadi m²).</li>
+      <li>ρ: resistivitas (Ω·m); α: koefisien suhu (1/°C); T: suhu kabel (°C).</li>
+      <li>I: arus (A); R: resistansi (Ω); P: daya (W); η: efisiensi (%).</li>
+    </ul></details>
+  <details><summary>Pengaruh bahan dan suhu</summary>
+    <p>Aluminium memiliki resistivitas lebih besar daripada tembaga, sehingga pada ukuran sama resistansinya lebih besar. Pada logam, kenaikan suhu menaikkan resistivitas karena getaran atom meningkat, sehingga resistansi dan drop tegangan ikut naik. Model linear hanya pendekatan pada rentang suhu terbatas.</p></details>
+  <details><summary>Hukum Ohm, daya, dan efisiensi</summary>
+    <p>Hukum Ohm (V = I R) berlaku pada tiap elemen: kabel dan beban terpasang seri, sehingga arus sama. Drop tegangan kabel menyebabkan sebagian daya terbuang sebagai panas di kabel (I² R<sub>kabel</sub>), sehingga daya beban dan efisiensi turun.</p></details>
+  <details><summary>Model satu arah vs dua kawat</summary>
+    <p>Pada rangkaian nyata, arus pergi lewat satu kawat dan kembali lewat kawat lain. Panjang lintasan total adalah 2L, maka faktor 2 pada rumus. Jika hanya memakai satu arah, resistansi kabel akan dihitung separuh dari seharusnya.</p></details>
+</section>
+
+<section id="eksperimen" class="card">
+  <h2>Eksperimen Virtual</h2>
+  <details open><summary>Eksperimen 1 – Pengaruh panjang kabel</summary><p>Tetapkan semua variabel lain (12 V, 2,5 mm², tembaga, 20 °C, 10 Ω). Ubah L menjadi 10, 30, 60, 100 m dan catat tiap nilai. <i>Simpulkan:</i> bagaimana R<sub>kabel</sub> dan V<sub>drop</sub> berubah terhadap L?</p></details>
+  <details><summary>Eksperimen 2 – Pengaruh luas penampang</summary><p>Tetapkan L = 50 m. Ubah A menjadi 0,5; 1,5; 2,5; 6; 10 mm². Amati R<sub>kabel</sub> dan V<sub>drop</sub>. <i>Simpulkan:</i> hubungan A dengan R.</p></details>
+  <details><summary>Eksperimen 3 – Pengaruh bahan kabel</summary><p>Gunakan L dan A yang sama, bandingkan tembaga dan aluminium. Catat keduanya, atau gunakan Grafik 4.</p></details>
+  <details><summary>Eksperimen 4 – Pengaruh resistansi beban</summary><p>Ubah R<sub>beban</sub> dari 1 sampai 100 Ω pada L = 50 m. Perhatikan: pada sumber tegangan konstan, drop tegangan tidak selalu naik ketika R<sub>beban</sub> naik, karena arus ikut berubah (turun). Persentase drop justru mengecil.</p></details>
+  <details><summary>Eksperimen 5 – Pengaruh suhu kabel</summary><p>Ubah T menjadi 0, 20, 50, 80, 100 °C. Amati ρ, R<sub>kabel</sub>, arus, dan V<sub>drop</sub>.</p></details>
+
+  <div class="btns">
+    <button id="btn-record" class="primary">📝 Catat ke tabel</button>
+    <button id="btn-csv">⬇ Unduh CSV</button>
+    <button id="btn-report">⬇ Unduh laporan (.txt)</button>
+    <button id="btn-clear">🗑 Kosongkan tabel</button>
+  </div>
+  <div class="tablewrap"><table class="tbl" id="log"><thead><tr>
+    <th>No</th><th>V<sub>s</sub> (V)</th><th>L (m)</th><th>A (mm²)</th><th>Bahan</th><th>T (°C)</th><th>R<sub>beban</sub> (Ω)</th>
+    <th>R<sub>kabel</sub> (Ω)</th><th>I (A)</th><th>V<sub>drop</sub> (V)</th><th>% drop</th><th>V<sub>beban</sub> (V)</th><th>η (%)</th><th>Catatan</th>
+  </tr></thead><tbody></tbody></table></div>
+  <p class="note" id="log-empty">Belum ada data. Tekan “Catat ke tabel” untuk menyimpan kondisi saat ini. Kolom catatan dapat Anda isi.</p>
+</section>
+
+<section id="kuis" class="card">
+  <h2>Kuis dan Evaluasi</h2>
+  <div id="quiz"></div>
+  <div class="btns"><button id="quiz-check" class="primary">Periksa jawaban</button><button id="quiz-reset">Ulang kuis</button></div>
+  <p id="quiz-score" class="score"></p>
+</section>
+
+<section id="model" class="card">
+  <h2>Tentang Model</h2>
+  <ul>
+    <li><b>Rangkaian DC resistif</b> keadaan tunak: sumber ideal, beban resistor tetap, tanpa induktansi/kapasitansi.</li>
+    <li><b>Model dua kawat</b> pergi-pulang sama panjang dan sama penampang: R<sub>kabel</sub> = 2ρL/A.</li>
+    <li><b>Suhu:</b> model linear ρ<sub>T</sub> = ρ<sub>20</sub>[1 + α(T − 20)], berlaku wajar pada rentang 0–100 °C. Suhu dianggap seragam dan diatur pengguna; pemanasan akibat arus tidak dihitung.</li>
+    <li><b>Nilai bahan</b> (ρ pada 20 °C, α) adalah nilai pendekatan dan dapat berbeda pada bahan sebenarnya (kemurnian, paduan, kabel berserat).</li>
+    <li><b>Tidak dimodelkan:</b> efek kulit, arus bolak-balik, reaktansi, resistansi sambungan, faktor daya, dan standar instalasi tertentu.</li>
+    <li>Animasi partikel adalah <b>visualisasi konseptual</b>.</li>
+  </ul>
+  <table class="tbl" id="mat-tbl"></table>
+</section>
+</main>
+
+<footer>Simulasi edukasi fisika • HTML, CSS, JavaScript murni • Chart.js 4.4.1 (CDN) untuk grafik</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" onerror="document.getElementById('cdn-warning').hidden=false"></script>
+<script src="script.js"></script>
+</body>
+</html>
